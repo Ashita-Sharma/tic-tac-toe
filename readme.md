@@ -29,7 +29,6 @@ Unlike normal array/matrix naming conventions, here the enumeration begins with 
 
 As we start with have two players, we can assign the character "X" to player 1 and character "O" to player 2.
 ### Winning Logic
-#### Horizontal
 For horizontal, I used the following code:    
 
         for row in range(BOARD_ROWS):
@@ -69,15 +68,39 @@ And so, we'll be able to use this knowledge to draw an "x" or an "o" upon the af
 
 ## Organization of code
 ### Section 1: Importing of all used modules.
-(right now[4/11/2025 16:46 IST] only pygame is being used.)
+(right now[4/11/2025 17:13 IST], Pygame, Pyinstaller, Sys and OS are being used.)
 
 ### Section 2: Constants and Variables
 All the constants used in the code, for ease of access and preventing any discrepancies.    
     
 They are arranged in the following order in these respective categories: Screen, Grid, Status and Setup variables
-### Section 3: functions
+### Section 3: Functions
 Defining of all functions to be used.    
    
 In the following order: Setup, Game logic, Winning Conditionals
 ### Section 4: Loop logic
 Logic and code to be used while "running == true" is active.
+
+
+### Section 0: Explanation of Pyinstaller
+Basically a bootloader, it bootstraps the code, i.e. creates an application such that the code is able to run without using a complier or an interpreter such as pycharm or vs code.
+When running PyInstaller code, it does the following:
+1) Downloads all imported modules, if any.
+2) A Build folder is created
+3) A dist folder is created which contains the newly created application/executable
+(The executable will execute the code required to run the program.)
+4) To convert the project into a single application, ran the following in my terminal:     
+   pyinstaller --onefile --noconsole --name="TicTacToe" main.py
+5) When running an executable created by pyinstaller, it stores data files within a temp folder,
+hence the need to start the code by making sure we direct the code to the correct folder where the data file(in this case, font file) is stored.
+
+## Resources used
+Here are all the resources I used to create this project:
+### Pygame Official Documentation
+https://www.pygame.org/docs/
+### Stack Overflow
+https://stackoverflow.com/questions
+### Geeksforgeeks
+https://www.geeksforgeeks.org/
+### Python Land
+https://python.land/

@@ -1,10 +1,22 @@
 #KNOWN ISSUES
 #I'm getting an error whenever I try to use comic sans font :(
-
 import pygame
-#to initialize pygame
+import sys
+import os
 
-pygame.init()
+
+# Adding this function to avoid errors when using data files
+def resource_path(relative_path):
+    try:
+        #To create a temp folder
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
+
+
+pygame.init() #to initialize pygame
 #<----------------CONSTANTS BEGIN HERE------------------->
 
 #Screen constants
@@ -173,7 +185,7 @@ def draw_status():
     #to know whose turn it is
     pygame.draw.rect(screen, STATUS_COLOR, (0, SCREEN_WIDTH, SCREEN_WIDTH, SCREEN_HEIGHT - SCREEN_WIDTH))
 
-    font = pygame.font.Font(None, 60)
+    font = pygame.font.Font(resource_path('comic-sans-bold.ttf'), 40)
     if game_over:
         if winner and player == 1:
             text = "Player X Wins!"
@@ -199,7 +211,7 @@ def draw_status():
     # Restart instruction
     if game_over:
         text2 = "Press R to Restart!"
-        font2 = pygame.font.Font(None, 60)
+        font2 = pygame.font.Font(resource_path('comic-sans-bold.ttf'), 40)
         text_surface2 = font2.render(text2, True, color)
         text_rect2 = text_surface2.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_WIDTH + 70))
 
