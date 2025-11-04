@@ -57,6 +57,28 @@ def draw_grid():
     pygame.draw.line(screen, LINE_COLOR, (SQUARE_SIZE, 0), (SQUARE_SIZE, SCREEN_WIDTH), LINE_WIDTH)
     pygame.draw.line(screen, LINE_COLOR, (2 * SQUARE_SIZE, 0), (2 * SQUARE_SIZE, SCREEN_WIDTH), LINE_WIDTH)
 
+def draw_horizontal_line(row, player):
+    if player == 1:
+        pygame.draw.line(screen, COLOR_X, (20, SQUARE_SIZE*row + SQUARE_SIZE//2), (SCREEN_WIDTH-20, SQUARE_SIZE*row + SQUARE_SIZE//2), LINE_WIDTH)
+    else:
+        pygame.draw.line(screen, COLOR_O, (20, SQUARE_SIZE*row + SQUARE_SIZE//2), (SCREEN_WIDTH-20, SQUARE_SIZE*row + SQUARE_SIZE//2), LINE_WIDTH)
+def draw_vertical_line(col, player):
+    if player == 1:
+        pygame.draw.line(screen, COLOR_X, (SQUARE_SIZE*col + SQUARE_SIZE//2, 20), (SQUARE_SIZE*col + SQUARE_SIZE//2, SCREEN_WIDTH-20), LINE_WIDTH)
+    else:
+        pygame.draw.line(screen, COLOR_O, (SQUARE_SIZE*col + SQUARE_SIZE//2, 20), (SQUARE_SIZE*col + SQUARE_SIZE//2, SCREEN_WIDTH-20), LINE_WIDTH)
+
+def draw_diagonal_line_1(player):
+    if player == 1:
+        pygame.draw.line(screen, COLOR_X, (25, 25), (SQUARE_SIZE*2 + SQUARE_SIZE-25, SQUARE_SIZE*2 + SQUARE_SIZE-25), LINE_WIDTH+5)
+    else:
+        pygame.draw.line(screen, COLOR_O, (25,25), (SQUARE_SIZE*2 + SQUARE_SIZE-25, SQUARE_SIZE*2 + SQUARE_SIZE-25), LINE_WIDTH+10)
+
+def draw_diagonal_line_2(player):
+    if player == 1:
+        pygame.draw.line(screen, COLOR_X, (SCREEN_WIDTH-25, 25), (25, SQUARE_SIZE*2 + SQUARE_SIZE-25), LINE_WIDTH+5)
+    else:
+        pygame.draw.line(screen, COLOR_O, (SCREEN_WIDTH-25, 25), (25, SQUARE_SIZE*2 + SQUARE_SIZE-25), LINE_WIDTH+10)
 
 def draw_status():
     #to know whose turn it is
@@ -70,7 +92,6 @@ def draw_status():
         z = "O"
         color = COLOR_O
     text = f"Player {z}'s Turn"
-
 
     text_surface = font.render(text, True, color)
     text_rect = text_surface.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_WIDTH + 25))
@@ -110,15 +131,19 @@ def winning_conditionals():
     for row in range(BOARD_ROWS):
         if board[row][0] == board[row][1] == board[row][2] == player:
             print("YOU WIN HORIZONTAL")
+            draw_horizontal_line(row, player)
     # vertical
     for col in range(BOARD_COLS):
         if board[0][col] == board[1][col] == board[2][col] == player:
             print("YOU WIN VERTICAL")
+            draw_vertical_line(col, player)
     # diagonal
     if board[0][0] == board[1][1] == board[2][2] == player:
         print("YOU WIN DIAGONAL")
+        draw_diagonal_line_1(player)
     elif board[0][2] == board[1][1] == board[2][0] == player:
         print("YOU WIN NOT DIAGONAL")
+        draw_diagonal_line_2(player)
 
 
 def draw_init():
