@@ -1,5 +1,4 @@
-#KNOWN ISSUES
-#I'm getting an error whenever I try to use comic sans font :(
+
 import pygame
 import sys
 import os
@@ -42,7 +41,6 @@ DRAW_COLOR = (144, 122, 214)
 LINE_WIDTH = 15
 TEXT_COLOR = COLOR_O
 STATUS_COLOR = LINE_COLOR
-#FONT_NAME = 'comic-sans-bold.ttf' will fix it soon
 
 #<----------------CONSTANTS END HERE------------------------>
 

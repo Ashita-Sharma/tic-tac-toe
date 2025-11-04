@@ -68,7 +68,7 @@ And so, we'll be able to use this knowledge to draw an "x" or an "o" upon the af
 
 ## Organization of code
 ### Section 1: Importing of all used modules.
-(right now[4/11/2025 17:13 IST], Pygame, Pyinstaller, Sys and OS are being used.)
+(As of [4/11/2025], Pygame, Pyinstaller, Sys and OS are being used.)
 
 ### Section 2: Constants and Variables
 All the constants used in the code, for ease of access and preventing any discrepancies.    
