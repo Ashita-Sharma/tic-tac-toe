@@ -6,13 +6,16 @@ A basic recreation of the classic tic tac toe game using the pygame module.
 ## Game logic used
 ### Tic Tac Toe logic 
 We start by making a nested list that will act as our game "board", in a sense. 
-Here, we use the format of  
+Here, we use the format of   
 
-board = [[None, None, None],  
+board =  
+[
+[None, None, None],  
 
-         [None, None, None],  
+[None, None, None],  
 
-         [None, None, None]]  
+[None, None, None]
+]  
 
 where len(board) will represent the rows while len(board[1]) will represent the columns.
 
