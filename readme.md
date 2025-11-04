@@ -9,13 +9,15 @@ We start by making a nested list that will act as our game "board", in a sense.
 Here, we use the format of   
 
 board =  
-[
-[None, None, None],  
+[   
 
 [None, None, None],  
 
-[None, None, None]
-]  
+[None, None, None],  
+
+[None, None, None]        
+
+]
 
 where len(board) will represent the rows while len(board[1]) will represent the columns.
 
