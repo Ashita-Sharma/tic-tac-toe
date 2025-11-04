@@ -126,7 +126,6 @@ def draw_init():
 
 
 #to check if game is running
-clock = pygame.time.Clock()
 running = True
 
 # THIS WAS THE REASON FOR ERROR!!!!
@@ -162,5 +161,4 @@ while running:
 
     draw_status()
     pygame.display.update()
-    clock.tick(60)
 
