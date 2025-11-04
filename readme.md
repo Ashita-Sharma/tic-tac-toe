@@ -28,11 +28,38 @@ Unlike normal array/matrix naming conventions, here the enumeration begins with 
 
 
 As we start with have two players, we can assign the character "X" to player 1 and character "O" to player 2.
+### Winning Logic
+#### Horizontal
+For horizontal, I used the following code:    
 
+        for row in range(BOARD_ROWS):
+            if board[row][0] == board[row][1] == board[row][2] == player:
+
+Here, I iterated through the range (1,3), placing(inserting) the iterated numbers to access a specific row.
+Then, I use a simple if conditional to check if the **current** player has won by confirming that all the values in a particular row are the same.
+(The winning condition will always be applied to the **current** player and is placed before the turn switch in order to prevent any unforeseen errors.)
+
+Similarly for vertical, I used the following code:    
+
+        for col in range(BOARD_COLS):
+            if board[0][col] == board[1][col] == board[2][col] == player:
+
+It works the same as for the horizontal but here I iterated through the nested list(columns) instead of the outer list(rows).
+
+For the diagonals, I used a very simple logic:    
+
+    if board[0][0] == board[1][1] == board[2][2] == player:
+        print("diagonal 1")
+    elif board[0][2] == board[1][1] == board[2][0] == player:
+        print("diagonal 2")
+
+For both, I just directly used the values of the required row and column, but I assume it's possible to iterate the same way as we did for the previous two conditions.  
+
+tldr:
 We can create logic for a horizontal combination of three by checking the values of all 3 rows until we satisfy our condition.
 Similar logic works for both diagonals and verticals.
 
-The game is "won" when a player manages to satisfy the above mentioned winning condition(s).
+The game is "won" when a player manages to satisfy the above-mentioned winning condition(s).
 
 ### Control logic
 For ease of controls, I/We shall use the built-in pygame "event" function to receive the values of mouse's horizontal and vertical coordinates.

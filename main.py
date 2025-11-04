@@ -105,6 +105,21 @@ def available_square(row,col):
         return True
 
 
+def winning_conditionals():
+    # horizontal
+    for row in range(BOARD_ROWS):
+        if board[row][0] == board[row][1] == board[row][2] == player:
+            print("YOU WIN HORIZONTAL")
+    # vertical
+    for col in range(BOARD_COLS):
+        if board[0][col] == board[1][col] == board[2][col] == player:
+            print("YOU WIN VERTICAL")
+    # diagonal
+    if board[0][0] == board[1][1] == board[2][2] == player:
+        print("YOU WIN DIAGONAL")
+    elif board[0][2] == board[1][1] == board[2][0] == player:
+        print("YOU WIN NOT DIAGONAL")
+
 
 def draw_init():
     screen.fill(BG_COLOR)
@@ -136,6 +151,7 @@ while running:
                 clicked_col = mouseX // SQUARE_SIZE
                 if available_square(clicked_row, clicked_col):
                     mark_square(clicked_row, clicked_col, player)
+                    winning_conditionals()
                     if player == 1:
                         # Switch player
                         player = 2
