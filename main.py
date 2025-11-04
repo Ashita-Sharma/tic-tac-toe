@@ -42,13 +42,12 @@ row = len(board)
 col = len(board[0])
 def test_controls():
 
-    mouseX = event.pos[0]
-    mouseY = event.pos[1]
-    if mouseY < SCREEN_WIDTH:
-        clicked_row = mouseY // SQUARE_SIZE
-        clicked_col = mouseX // SQUARE_SIZE
-        print(clicked_row, clicked_col)
-def draw_lines():
+    #MOVED TO CORRECT LOCATION
+
+    pass
+
+
+def draw_grid():
     #to draw grid lines
     # Horizontal lines
     pygame.draw.line(screen, LINE_COLOR, (0, SQUARE_SIZE), (SCREEN_WIDTH, SQUARE_SIZE), LINE_WIDTH)
@@ -71,29 +70,34 @@ def draw_status():
     text_rect = text_surface.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_WIDTH + 25))
     screen.blit(text_surface, text_rect) #block transferring (blit) of the text
 
-# To create logic for clicking
+
+# To create logic for gameplay
 def draw_figures():
     #drawing of x's and o's
     for row in range(BOARD_ROWS):
         for col in range(BOARD_COLS):
             if board[row][col] == 1:
                 # To draw X
-                start_x = col * SQUARE_SIZE + SPACE
-                start_y = row * SQUARE_SIZE + SPACE
-                end_x = col * SQUARE_SIZE + SQUARE_SIZE - SPACE
-                end_y = row * SQUARE_SIZE + SQUARE_SIZE - SPACE
+                start_x = (col * SQUARE_SIZE) + SPACE
+                start_y = (row * SQUARE_SIZE) + SPACE
+                end_x = (col * SQUARE_SIZE + SQUARE_SIZE) - SPACE
+                end_y = (row * SQUARE_SIZE + SQUARE_SIZE) - SPACE
                 pygame.draw.line(screen, COLOR_X, (start_x, start_y), (end_x, end_y), CROSS_WIDTH)
                 pygame.draw.line(screen, COLOR_X, (start_x, end_y), (end_x, start_y), CROSS_WIDTH)
 
             elif board[row][col] == 2:
                 # To draw O
-                center_x = col * SQUARE_SIZE + SQUARE_SIZE // 2
-                center_y = row * SQUARE_SIZE + SQUARE_SIZE // 2
+                center_x = (col * SQUARE_SIZE) + SQUARE_SIZE // 2
+                center_y = (row * SQUARE_SIZE) + SQUARE_SIZE // 2
                 pygame.draw.circle(screen, COLOR_O, (center_x, center_y), CIRCLE_RADIUS, CIRCLE_WIDTH)
-
-
+#to assign a square to the CURRENT player
 def mark_square(row, col, player):
     board[row][col] = player
+#to check if square is available
+def available_square(row,col):
+    if board[row][col] == None:
+        return True
+
 
 
 
@@ -102,15 +106,26 @@ running = True
 
 def draw_init():
     screen.fill(BG_COLOR)
+
+
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT: #to quit the program when clicked on "x"
             running = False
 
         if event.type == pygame.MOUSEBUTTONDOWN:
-            test_controls()
+            mouseX = event.pos[0]
+            mouseY = event.pos[1]
+            if mouseY < SCREEN_WIDTH:
+                clicked_row = mouseY // SQUARE_SIZE
+                clicked_col = mouseX // SQUARE_SIZE
+                if available_square(clicked_row, clicked_col):
+                    mark_square(clicked_row, clicked_col, player)
+                    draw_figures()
+
     draw_init()
-    draw_lines()
+    draw_grid()
     draw_status()
+
     pygame.display.update()
 
