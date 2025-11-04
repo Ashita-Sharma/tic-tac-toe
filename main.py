@@ -3,18 +3,30 @@ import pygame
 #to initialize pygame
 
 pygame.init()
-#constants
-COLS = 3
-ROWS = 3
+#<----------------CONSTANTS BEGIN HERE--------------->
+
+#Screen constants
+BOARD_COLS = 3
+BOARD_ROWS = 3
 
 BG_COLOR = (228, 193, 249)
 SCREEN_WIDTH = 600
 SCREEN_HEIGHT = 700
-SQUARE_SIZE = SCREEN_WIDTH // COLS
+
+# Square constants
+SQUARE_SIZE = SCREEN_WIDTH // BOARD_COLS
+SPACE = SQUARE_SIZE // 4
+COLOR_X = (144, 241, 239)
+COLOR_O = (123, 241, 168)
+CIRCLE_RADIUS = SQUARE_SIZE // 3
+CIRCLE_WIDTH = 15
+CROSS_WIDTH = 25
+
+#Status constants
 LINE_COLOR =  	(255, 239, 159)
 LINE_WIDTH = 15
 TEXT_COLOR = (255, 153, 200)
-STATUS_COLOR = (255, 239, 159)
+STATUS_COLOR = LINE_COLOR
 #setup of screen
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("Tic Tac Toe")
@@ -26,9 +38,13 @@ board = [[None, None, None],
          [None, None, None]]
 player = 1  # considering initial player to be X
 winner = None
+row = len(board)
+col = len(board[0])
 def test_controls():
-
-    pass
+    if event.type == pygame.MOUSEBUTTONDOWN:
+        mouseX = event.pos[0]
+        mouseY = event.pos[1]
+        print(mouseX, mouseY)
 
 def draw_lines():
     #to draw grid lines
@@ -52,6 +68,33 @@ def draw_status():
     text_surface = font.render(text, True, color)
     text_rect = text_surface.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_WIDTH + 25))
     screen.blit(text_surface, text_rect) #block transferring (blit) of the text
+
+# To create logic for clicking
+def draw_figures():
+    #drawing of x's and o's
+    for row in range(BOARD_ROWS):
+        for col in range(BOARD_COLS):
+            if board[row][col] == 1:
+                # To draw X
+                start_x = col * SQUARE_SIZE + SPACE
+                start_y = row * SQUARE_SIZE + SPACE
+                end_x = col * SQUARE_SIZE + SQUARE_SIZE - SPACE
+                end_y = row * SQUARE_SIZE + SQUARE_SIZE - SPACE
+                pygame.draw.line(screen, COLOR_X, (start_x, start_y), (end_x, end_y), CROSS_WIDTH)
+                pygame.draw.line(screen, COLOR_X, (start_x, end_y), (end_x, start_y), CROSS_WIDTH)
+
+            elif board[row][col] == 2:
+                # To draw O
+                center_x = col * SQUARE_SIZE + SQUARE_SIZE // 2
+                center_y = row * SQUARE_SIZE + SQUARE_SIZE // 2
+                pygame.draw.circle(screen, COLOR_O, (center_x, center_y), CIRCLE_RADIUS, CIRCLE_WIDTH)
+
+
+def mark_square(row, col, player):
+    board[row][col] = player
+
+
+
 #to check if game is running
 running = True
 
@@ -61,6 +104,9 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT: #to quit the program when clicked on "x"
             running = False
+
+        else:
+            test_controls()
     draw_init()
     draw_lines()
     draw_status()
