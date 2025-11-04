@@ -19,7 +19,7 @@ SPACE = SQUARE_SIZE // 4
 COLOR_X = (17, 138, 178)
 COLOR_O = (239, 71, 111)
 CIRCLE_RADIUS = SQUARE_SIZE // 3
-CIRCLE_WIDTH = 15
+CIRCLE_WIDTH = 25
 CROSS_WIDTH = 25
 
 #Status constants
@@ -63,8 +63,14 @@ def draw_status():
     pygame.draw.rect(screen, STATUS_COLOR, (0, SCREEN_WIDTH, SCREEN_WIDTH, SCREEN_HEIGHT - SCREEN_WIDTH))
 
     font = pygame.font.Font('Comic Sans MS 400.ttf', 40)
-    text = f"Player's Turn"
-    color = TEXT_COLOR
+    if player == 1:
+        z = "X"
+        color = COLOR_X
+    else:
+        z = "O"
+        color = COLOR_O
+    text = f"Player {z}'s Turn"
+
 
     text_surface = font.render(text, True, color)
     text_rect = text_surface.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_WIDTH + 25))
@@ -100,8 +106,6 @@ def available_square(row,col):
 
 
 
-
-
 def draw_init():
     screen.fill(BG_COLOR)
 
@@ -132,6 +136,12 @@ while running:
                 clicked_col = mouseX // SQUARE_SIZE
                 if available_square(clicked_row, clicked_col):
                     mark_square(clicked_row, clicked_col, player)
+                    if player == 1:
+                        # Switch player
+                        player = 2
+                    else:
+                        player = 1
+
                     draw_figures()
 
     draw_status()
