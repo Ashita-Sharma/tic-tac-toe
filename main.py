@@ -23,10 +23,12 @@ CIRCLE_WIDTH = 25
 CROSS_WIDTH = 25
 
 #Status constants
-LINE_COLOR =  	(6, 214, 160)
+LINE_COLOR = (6, 214, 160)
+DRAW_COLOR = (144, 122, 214)
 LINE_WIDTH = 15
 TEXT_COLOR = COLOR_O
 STATUS_COLOR = LINE_COLOR
+FONT_NAME = 'comic-sans-bold.ttf'
 #setup of screen
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("Tic Tac Toe")
@@ -38,6 +40,7 @@ board = [[None, None, None],
          [None, None, None]]
 player = 1  # considering initial player to be X
 winner = None
+game_over = False
 row = len(board)
 col = len(board[0])
 def test_controls():
@@ -84,18 +87,37 @@ def draw_status():
     #to know whose turn it is
     pygame.draw.rect(screen, STATUS_COLOR, (0, SCREEN_WIDTH, SCREEN_WIDTH, SCREEN_HEIGHT - SCREEN_WIDTH))
 
-    font = pygame.font.Font('Comic Sans MS 400.ttf', 40)
-    if player == 1:
+    font = pygame.font.Font('FONT_NAME', 40)
+    if game_over:
+        if winner and player == 1:
+            text = "Player X Wins!"
+            color = COLOR_X
+        elif winner and player ==2:
+            text = "Player O Wins!"
+            color = COLOR_O
+        else:
+            text = "It's a Draw!"
+            color = DRAW_COLOR
+    elif player == 1:
         z = "X"
         color = COLOR_X
+        text = "Player X's turn"
     else:
         z = "O"
         color = COLOR_O
-    text = f"Player {z}'s Turn"
+        text = f"Player O's Turn"
 
     text_surface = font.render(text, True, color)
     text_rect = text_surface.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_WIDTH + 25))
     screen.blit(text_surface, text_rect) #block transferring (blit) of the text
+    # Restart instruction
+    if game_over:
+        text2 = "Press R to Restart!"
+        font2 = pygame.font.Font('FONT_NAME', 40)
+        text_surface2 = font2.render(text2, True, color)
+        text_rect2 = text_surface2.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_WIDTH + 70))
+
+        screen.blit(text_surface2, text_rect2)
 
 
 # To create logic for gameplay
@@ -124,31 +146,49 @@ def mark_square(row, col, player):
 def available_square(row,col):
     if board[row][col] == None:
         return True
+    return False
+def is_board_full():
+    """Check if the board is full (draw)"""
+    for row in range(BOARD_ROWS):
+        for col in range(BOARD_COLS):
+            if board[row][col] is None:
+                return False
+    return True
 
-
-def winning_conditionals():
+def winning_conditionals(player):
     # horizontal
     for row in range(BOARD_ROWS):
         if board[row][0] == board[row][1] == board[row][2] == player:
-            print("YOU WIN HORIZONTAL")
             draw_horizontal_line(row, player)
+            return True
     # vertical
     for col in range(BOARD_COLS):
         if board[0][col] == board[1][col] == board[2][col] == player:
-            print("YOU WIN VERTICAL")
             draw_vertical_line(col, player)
+            return True
     # diagonal
     if board[0][0] == board[1][1] == board[2][2] == player:
-        print("YOU WIN DIAGONAL")
         draw_diagonal_line_1(player)
+        return True
     elif board[0][2] == board[1][1] == board[2][0] == player:
-        print("YOU WIN NOT DIAGONAL")
         draw_diagonal_line_2(player)
+        return True
+    return False
 
 
 def draw_init():
     screen.fill(BG_COLOR)
 
+def restart():
+    global player, board, game_over, winner
+    game_over = False
+    winner = None
+    draw_init()
+    draw_grid()
+    player = 1
+    board = [[None, None, None],
+             [None, None, None],
+             [None, None, None]]
 
 #to check if game is running
 running = True
@@ -162,28 +202,42 @@ draw_grid()
 
 while running:
 
-
+    draw_status()
     for event in pygame.event.get():
         if event.type == pygame.QUIT: #to quit the program when clicked on "x"
             running = False
 
-        if event.type == pygame.MOUSEBUTTONDOWN and running:
+        elif event.type == pygame.MOUSEBUTTONDOWN and not game_over:
             mouseX = event.pos[0]
             mouseY = event.pos[1]
+
             if mouseY < SCREEN_WIDTH:
                 clicked_row = mouseY // SQUARE_SIZE
-                clicked_col = mouseX // SQUARE_SIZE
+                clicked_col = mouseX // SQUARE_SIZE\
+
                 if available_square(clicked_row, clicked_col):
                     mark_square(clicked_row, clicked_col, player)
-                    winning_conditionals()
-                    if player == 1:
+
+                    if winning_conditionals(player):
+                        game_over = True
+                        winner = player
+
+                    elif is_board_full():
+                        game_over = True
+                        winner = None
+                        draw_status()
+
+                    if player == 1 and not winning_conditionals(player):
                         # Switch player
                         player = 2
-                    else:
+                    elif player == 2 and not winning_conditionals(player):
                         player = 1
-
                     draw_figures()
+        elif game_over and event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_r:
+                restart()
 
-    draw_status()
+
+
     pygame.display.update()
 
