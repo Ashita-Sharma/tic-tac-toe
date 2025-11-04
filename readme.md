@@ -69,13 +69,15 @@ And so, we'll be able to use this knowledge to draw an "x" or an "o" upon the af
 
 ## Organization of code
 ### Section 1: Importing of all used modules.
-(right now[4/11/2025] only pygame is being used.)
+(right now[4/11/2025 16:46 IST] only pygame is being used.)
 
-### Section 2: Constants
-All the constants used in the code, for ease of access and preventing any discrepancies 
-
+### Section 2: Constants and Variables
+All the constants used in the code, for ease of access and preventing any discrepancies.    
+    
+They are arranged in the following order in these respective categories: Screen, Grid, Status and Setup variables
 ### Section 3: functions
-defining of all functions to be used.
-
+Defining of all functions to be used.    
+   
+In the following order: Setup, Game logic, Winning Conditionals
 ### Section 4: Loop logic
-Logic to be used while "running == true" is active.
+Logic and code to be used while "running == true" is active.

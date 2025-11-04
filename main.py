@@ -1,9 +1,11 @@
-import pygame
+#KNOWN ISSUES
+#I'm getting an error whenever I try to use comic sans font :(
 
+import pygame
 #to initialize pygame
 
 pygame.init()
-#<----------------CONSTANTS BEGIN HERE--------------->
+#<----------------CONSTANTS BEGIN HERE------------------->
 
 #Screen constants
 BOARD_COLS = 3
@@ -13,7 +15,7 @@ BG_COLOR = (255, 209, 102)
 SCREEN_WIDTH = 600
 SCREEN_HEIGHT = 700
 
-# Square constants
+# Grid constants
 SQUARE_SIZE = SCREEN_WIDTH // BOARD_COLS
 SPACE = SQUARE_SIZE // 4
 COLOR_X = (17, 138, 178)
@@ -28,12 +30,15 @@ DRAW_COLOR = (144, 122, 214)
 LINE_WIDTH = 15
 TEXT_COLOR = COLOR_O
 STATUS_COLOR = LINE_COLOR
-FONT_NAME = 'comic-sans-bold.ttf'
+#FONT_NAME = 'comic-sans-bold.ttf' will fix it soon
+
+#<----------------CONSTANTS END HERE------------------------>
+
+
+#<----------------SCREEN SETUP BEGINS HERE------------------->
 #setup of screen
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("Tic Tac Toe")
-
-
 #basic setup of screen
 board = [[None, None, None],
          [None, None, None],
@@ -43,12 +48,15 @@ winner = None
 game_over = False
 row = len(board)
 col = len(board[0])
-def test_controls():
 
-    #MOVED TO CORRECT LOCATION
+#<----------------SCREEN SETUP ENDS HERE------------------->
 
-    pass
+#Deleted test function
 
+#<----------------SETUP FUNCTIONS BEGIN HERE------------------->
+
+def draw_init():
+    screen.fill(BG_COLOR)
 
 def draw_grid():
     #to draw grid lines
@@ -60,65 +68,20 @@ def draw_grid():
     pygame.draw.line(screen, LINE_COLOR, (SQUARE_SIZE, 0), (SQUARE_SIZE, SCREEN_WIDTH), LINE_WIDTH)
     pygame.draw.line(screen, LINE_COLOR, (2 * SQUARE_SIZE, 0), (2 * SQUARE_SIZE, SCREEN_WIDTH), LINE_WIDTH)
 
-def draw_horizontal_line(row, player):
-    if player == 1:
-        pygame.draw.line(screen, COLOR_X, (20, SQUARE_SIZE*row + SQUARE_SIZE//2), (SCREEN_WIDTH-20, SQUARE_SIZE*row + SQUARE_SIZE//2), LINE_WIDTH)
-    else:
-        pygame.draw.line(screen, COLOR_O, (20, SQUARE_SIZE*row + SQUARE_SIZE//2), (SCREEN_WIDTH-20, SQUARE_SIZE*row + SQUARE_SIZE//2), LINE_WIDTH)
-def draw_vertical_line(col, player):
-    if player == 1:
-        pygame.draw.line(screen, COLOR_X, (SQUARE_SIZE*col + SQUARE_SIZE//2, 20), (SQUARE_SIZE*col + SQUARE_SIZE//2, SCREEN_WIDTH-20), LINE_WIDTH)
-    else:
-        pygame.draw.line(screen, COLOR_O, (SQUARE_SIZE*col + SQUARE_SIZE//2, 20), (SQUARE_SIZE*col + SQUARE_SIZE//2, SCREEN_WIDTH-20), LINE_WIDTH)
+def restart():
+    global player, board, game_over, winner
+    game_over = False
+    winner = None
+    draw_init()
+    draw_grid()
+    player = 1
+    board = [[None, None, None],
+             [None, None, None],
+             [None, None, None]]
 
-def draw_diagonal_line_1(player):
-    if player == 1:
-        pygame.draw.line(screen, COLOR_X, (25, 25), (SQUARE_SIZE*2 + SQUARE_SIZE-25, SQUARE_SIZE*2 + SQUARE_SIZE-25), LINE_WIDTH+5)
-    else:
-        pygame.draw.line(screen, COLOR_O, (25,25), (SQUARE_SIZE*2 + SQUARE_SIZE-25, SQUARE_SIZE*2 + SQUARE_SIZE-25), LINE_WIDTH+10)
+#<----------------SETUP FUNCTIONS END HERE------------------------>
 
-def draw_diagonal_line_2(player):
-    if player == 1:
-        pygame.draw.line(screen, COLOR_X, (SCREEN_WIDTH-25, 25), (25, SQUARE_SIZE*2 + SQUARE_SIZE-25), LINE_WIDTH+5)
-    else:
-        pygame.draw.line(screen, COLOR_O, (SCREEN_WIDTH-25, 25), (25, SQUARE_SIZE*2 + SQUARE_SIZE-25), LINE_WIDTH+10)
-
-def draw_status():
-    #to know whose turn it is
-    pygame.draw.rect(screen, STATUS_COLOR, (0, SCREEN_WIDTH, SCREEN_WIDTH, SCREEN_HEIGHT - SCREEN_WIDTH))
-
-    font = pygame.font.Font('FONT_NAME', 40)
-    if game_over:
-        if winner and player == 1:
-            text = "Player X Wins!"
-            color = COLOR_X
-        elif winner and player ==2:
-            text = "Player O Wins!"
-            color = COLOR_O
-        else:
-            text = "It's a Draw!"
-            color = DRAW_COLOR
-    elif player == 1:
-        z = "X"
-        color = COLOR_X
-        text = "Player X's turn"
-    else:
-        z = "O"
-        color = COLOR_O
-        text = f"Player O's Turn"
-
-    text_surface = font.render(text, True, color)
-    text_rect = text_surface.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_WIDTH + 25))
-    screen.blit(text_surface, text_rect) #block transferring (blit) of the text
-    # Restart instruction
-    if game_over:
-        text2 = "Press R to Restart!"
-        font2 = pygame.font.Font('FONT_NAME', 40)
-        text_surface2 = font2.render(text2, True, color)
-        text_rect2 = text_surface2.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_WIDTH + 70))
-
-        screen.blit(text_surface2, text_rect2)
-
+#<----------------GAMEPLAY LOGIC BEGINS HERE---------------------->
 
 # To create logic for gameplay
 def draw_figures():
@@ -155,6 +118,35 @@ def is_board_full():
                 return False
     return True
 
+#<----------------GAMEPLAY LOGIC ENDS HERE---------------------->
+
+#<----------------WINNING CONDITIONALS BEGIN HERE----------------->
+
+def draw_horizontal_line(row, player):
+    if player == 1:
+        pygame.draw.line(screen, COLOR_X, (20, SQUARE_SIZE*row + SQUARE_SIZE//2), (SCREEN_WIDTH-20, SQUARE_SIZE*row + SQUARE_SIZE//2), LINE_WIDTH)
+    else:
+        pygame.draw.line(screen, COLOR_O, (20, SQUARE_SIZE*row + SQUARE_SIZE//2), (SCREEN_WIDTH-20, SQUARE_SIZE*row + SQUARE_SIZE//2), LINE_WIDTH)
+def draw_vertical_line(col, player):
+    if player == 1:
+        pygame.draw.line(screen, COLOR_X, (SQUARE_SIZE*col + SQUARE_SIZE//2, 20), (SQUARE_SIZE*col + SQUARE_SIZE//2, SCREEN_WIDTH-20), LINE_WIDTH)
+    else:
+        pygame.draw.line(screen, COLOR_O, (SQUARE_SIZE*col + SQUARE_SIZE//2, 20), (SQUARE_SIZE*col + SQUARE_SIZE//2, SCREEN_WIDTH-20), LINE_WIDTH)
+
+def draw_diagonal_line_1(player):
+    if player == 1:
+        pygame.draw.line(screen, COLOR_X, (25, 25), (SQUARE_SIZE*2 + SQUARE_SIZE-25, SQUARE_SIZE*2 + SQUARE_SIZE-25), LINE_WIDTH+5)
+    else:
+        pygame.draw.line(screen, COLOR_O, (25,25), (SQUARE_SIZE*2 + SQUARE_SIZE-25, SQUARE_SIZE*2 + SQUARE_SIZE-25), LINE_WIDTH+10)
+
+def draw_diagonal_line_2(player):
+    if player == 1:
+        pygame.draw.line(screen, COLOR_X, (SCREEN_WIDTH-25, 25), (25, SQUARE_SIZE*2 + SQUARE_SIZE-25), LINE_WIDTH+5)
+    else:
+        pygame.draw.line(screen, COLOR_O, (SCREEN_WIDTH-25, 25), (25, SQUARE_SIZE*2 + SQUARE_SIZE-25), LINE_WIDTH+10)
+
+
+
 def winning_conditionals(player):
     # horizontal
     for row in range(BOARD_ROWS):
@@ -176,20 +168,48 @@ def winning_conditionals(player):
     return False
 
 
-def draw_init():
-    screen.fill(BG_COLOR)
 
-def restart():
-    global player, board, game_over, winner
-    game_over = False
-    winner = None
-    draw_init()
-    draw_grid()
-    player = 1
-    board = [[None, None, None],
-             [None, None, None],
-             [None, None, None]]
+def draw_status():
+    #to know whose turn it is
+    pygame.draw.rect(screen, STATUS_COLOR, (0, SCREEN_WIDTH, SCREEN_WIDTH, SCREEN_HEIGHT - SCREEN_WIDTH))
 
+    font = pygame.font.Font(None, 60)
+    if game_over:
+        if winner and player == 1:
+            text = "Player X Wins!"
+            color = COLOR_X
+        elif winner and player ==2:
+            text = "Player O Wins!"
+            color = COLOR_O
+        else:
+            text = "It's a Draw!"
+            color = DRAW_COLOR
+    elif player == 1:
+        z = "X"
+        color = COLOR_X
+        text = "Player X's turn"
+    else:
+        z = "O"
+        color = COLOR_O
+        text = f"Player O's Turn"
+
+    text_surface = font.render(text, True, color)
+    text_rect = text_surface.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_WIDTH + 25))
+    screen.blit(text_surface, text_rect) #block transferring (blit) of the text
+    # Restart instruction
+    if game_over:
+        text2 = "Press R to Restart!"
+        font2 = pygame.font.Font(None, 60)
+        text_surface2 = font2.render(text2, True, color)
+        text_rect2 = text_surface2.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_WIDTH + 70))
+
+        screen.blit(text_surface2, text_rect2)
+
+#<----------------WINNING CONDITIONALS END HERE----------------->
+
+
+
+#<----------------RUNNING GAME LOGIC BEGINS HERE----------------->
 #to check if game is running
 running = True
 
@@ -241,3 +261,6 @@ while running:
 
     pygame.display.update()
 
+#<----------------RUNNING GAME LOGIC BEGINS HERE----------------->
+
+#<-------------------------------CODE ENDS HERE------------------------------------->
