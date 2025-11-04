@@ -41,11 +41,13 @@ winner = None
 row = len(board)
 col = len(board[0])
 def test_controls():
-    if event.type == pygame.MOUSEBUTTONDOWN:
-        mouseX = event.pos[0]
-        mouseY = event.pos[1]
-        print(mouseX, mouseY)
 
+    mouseX = event.pos[0]
+    mouseY = event.pos[1]
+    if mouseY < SCREEN_WIDTH:
+        clicked_row = mouseY // SQUARE_SIZE
+        clicked_col = mouseX // SQUARE_SIZE
+        print(clicked_row, clicked_col)
 def draw_lines():
     #to draw grid lines
     # Horizontal lines
@@ -105,7 +107,7 @@ while running:
         if event.type == pygame.QUIT: #to quit the program when clicked on "x"
             running = False
 
-        else:
+        if event.type == pygame.MOUSEBUTTONDOWN:
             test_controls()
     draw_init()
     draw_lines()
