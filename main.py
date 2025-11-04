@@ -101,19 +101,30 @@ def available_square(row,col):
 
 
 
-#to check if game is running
-running = True
 
 def draw_init():
     screen.fill(BG_COLOR)
 
 
+#to check if game is running
+clock = pygame.time.Clock()
+running = True
+
+# THIS WAS THE REASON FOR ERROR!!!!
+# 1) screen was being drawn AFTER the event conditionals
+# 2) because the initialization and grid creation were in the while loop
+# the screen was constantly being refreshed THAT'S WHY the code was not working!
+draw_init()
+draw_grid()
+
 while running:
+
+
     for event in pygame.event.get():
         if event.type == pygame.QUIT: #to quit the program when clicked on "x"
             running = False
 
-        if event.type == pygame.MOUSEBUTTONDOWN:
+        if event.type == pygame.MOUSEBUTTONDOWN and running:
             mouseX = event.pos[0]
             mouseY = event.pos[1]
             if mouseY < SCREEN_WIDTH:
@@ -123,9 +134,7 @@ while running:
                     mark_square(clicked_row, clicked_col, player)
                     draw_figures()
 
-    draw_init()
-    draw_grid()
     draw_status()
-
     pygame.display.update()
+    clock.tick(60)
 
