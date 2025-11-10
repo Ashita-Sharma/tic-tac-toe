@@ -16,28 +16,37 @@ def resource_path(relative_path):
 
 
 pygame.init() #to initialize pygame
+pygame.mixer.init()  # Initialize the mixer for sound
+
+# Load and play background music
+try:
+    pygame.mixer.music.load(resource_path('bgm.mp3'))
+    pygame.mixer.music.set_volume(1.0)  # Volume: 0.0 to 1.0 (100%)
+    pygame.mixer.music.play(-1)  # -1 means loop forever
+except:
+    print("BGM MISSING")
 #<----------------CONSTANTS BEGIN HERE------------------->
 
 #Screen constants
 BOARD_COLS = 3
 BOARD_ROWS = 3
 
-BG_COLOR = (255, 209, 102)
+BG_COLOR = (255, 209, 102) #Dandelion Yellow
 SCREEN_WIDTH = 600
 SCREEN_HEIGHT = 700
 
 # Grid constants
 SQUARE_SIZE = SCREEN_WIDTH // BOARD_COLS
 SPACE = SQUARE_SIZE // 4
-COLOR_X = (17, 138, 178)
-COLOR_O = (239, 71, 111)
+COLOR_X = (17, 138, 178) #Navy Blue
+COLOR_O = (239, 71, 111) #Magenta
 CIRCLE_RADIUS = SQUARE_SIZE // 3
 CIRCLE_WIDTH = 25
 CROSS_WIDTH = 25
 
 #Status constants
-LINE_COLOR = (6, 214, 160)
-DRAW_COLOR = (144, 122, 214)
+LINE_COLOR = (6, 214, 160) #Sea Green
+DRAW_COLOR = (144, 122, 214) #Violet
 LINE_WIDTH = 15
 TEXT_COLOR = COLOR_O
 STATUS_COLOR = LINE_COLOR
