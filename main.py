@@ -1,5 +1,4 @@
-#KNOWN ISSUES
-#I'm getting an error whenever I try to use comic sans font :(
+
 import pygame
 import sys
 import os
@@ -17,32 +16,40 @@ def resource_path(relative_path):
 
 
 pygame.init() #to initialize pygame
+pygame.mixer.init()  # Initialize the mixer for sound
+
+# Load and play background music
+try:
+    pygame.mixer.music.load(resource_path('bgm.mp3'))
+    pygame.mixer.music.set_volume(1.0)  # Volume: 0.0 to 1.0 (100%)
+    pygame.mixer.music.play(-1)  # -1 means loop forever
+except:
+    print("BGM MISSING")
 #<----------------CONSTANTS BEGIN HERE------------------->
 
 #Screen constants
 BOARD_COLS = 3
 BOARD_ROWS = 3
 
-BG_COLOR = (255, 209, 102)
+BG_COLOR = (255, 209, 102) #Dandelion Yellow
 SCREEN_WIDTH = 600
 SCREEN_HEIGHT = 700
 
 # Grid constants
 SQUARE_SIZE = SCREEN_WIDTH // BOARD_COLS
 SPACE = SQUARE_SIZE // 4
-COLOR_X = (17, 138, 178)
-COLOR_O = (239, 71, 111)
+COLOR_X = (17, 138, 178) #Navy Blue
+COLOR_O = (239, 71, 111) #Magenta
 CIRCLE_RADIUS = SQUARE_SIZE // 3
 CIRCLE_WIDTH = 25
 CROSS_WIDTH = 25
 
 #Status constants
-LINE_COLOR = (6, 214, 160)
-DRAW_COLOR = (144, 122, 214)
+LINE_COLOR = (6, 214, 160) #Sea Green
+DRAW_COLOR = (144, 122, 214) #Violet
 LINE_WIDTH = 15
 TEXT_COLOR = COLOR_O
 STATUS_COLOR = LINE_COLOR
-#FONT_NAME = 'comic-sans-bold.ttf' will fix it soon
 
 #<----------------CONSTANTS END HERE------------------------>
 
@@ -60,6 +67,7 @@ winner = None
 game_over = False
 row = len(board)
 col = len(board[0])
+screen_const = 0
 
 #<----------------SCREEN SETUP ENDS HERE------------------->
 
@@ -90,6 +98,20 @@ def restart():
     board = [[None, None, None],
              [None, None, None],
              [None, None, None]]
+def draw_start():
+    screen.fill(BG_COLOR)
+    text = "Welcome to Game Parade!"
+    font = pygame.font.Font(resource_path('comic-sans-bold.ttf'), 40)
+    color = COLOR_X
+    text_surface = font.render(text, True, color)
+    text_rect = text_surface.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_WIDTH // 2))
+    screen.blit(text_surface, text_rect)
+    color2 = TEXT_COLOR
+    text2 = "Press R to start the game!"
+    pygame.draw.rect(screen, STATUS_COLOR, (0, SCREEN_WIDTH, SCREEN_WIDTH, SCREEN_HEIGHT - SCREEN_WIDTH))
+    text_surface2 = font.render(text2, True, color2)
+    text_rect2 = text_surface2.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_WIDTH + 25))
+    screen.blit(text_surface2, text_rect2)
 
 #<----------------SETUP FUNCTIONS END HERE------------------------>
 
@@ -183,39 +205,41 @@ def winning_conditionals(player):
 
 def draw_status():
     #to know whose turn it is
-    pygame.draw.rect(screen, STATUS_COLOR, (0, SCREEN_WIDTH, SCREEN_WIDTH, SCREEN_HEIGHT - SCREEN_WIDTH))
+    if screen_const == 1:
+        pygame.draw.rect(screen, STATUS_COLOR, (0, SCREEN_WIDTH, SCREEN_WIDTH, SCREEN_HEIGHT - SCREEN_WIDTH))
 
-    font = pygame.font.Font(resource_path('comic-sans-bold.ttf'), 40)
-    if game_over:
-        if winner and player == 1:
-            text = "Player X Wins!"
+        font = pygame.font.Font(resource_path('comic-sans-bold.ttf'), 40)
+        if game_over:
+            if winner and player == 1:
+                text = "Player X Wins!"
+                color = COLOR_X
+            elif winner and player ==2:
+                text = "Player O Wins!"
+                color = COLOR_O
+            else:
+                text = "It's a Draw!"
+                color = DRAW_COLOR
+        elif player == 1:
+            z = "X"
             color = COLOR_X
-        elif winner and player ==2:
-            text = "Player O Wins!"
-            color = COLOR_O
+            text = "Player X's turn"
         else:
-            text = "It's a Draw!"
-            color = DRAW_COLOR
-    elif player == 1:
-        z = "X"
-        color = COLOR_X
-        text = "Player X's turn"
-    else:
-        z = "O"
-        color = COLOR_O
-        text = f"Player O's Turn"
+            z = "O"
+            color = COLOR_O
+            text = f"Player O's Turn"
 
-    text_surface = font.render(text, True, color)
-    text_rect = text_surface.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_WIDTH + 25))
-    screen.blit(text_surface, text_rect) #block transferring (blit) of the text
-    # Restart instruction
-    if game_over:
-        text2 = "Press R to Restart!"
-        font2 = pygame.font.Font(resource_path('comic-sans-bold.ttf'), 40)
-        text_surface2 = font2.render(text2, True, color)
-        text_rect2 = text_surface2.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_WIDTH + 70))
+        text_surface = font.render(text, True, color)
+        text_rect = text_surface.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_WIDTH + 25))
+        screen.blit(text_surface, text_rect)
+        #block transferring (blit) of the text
+        # Restart instruction
+        if game_over:
+            text2 = "Press R to Restart!"
+            font2 = pygame.font.Font(resource_path('comic-sans-bold.ttf'), 40)
+            text_surface2 = font2.render(text2, True, color)
+            text_rect2 = text_surface2.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_WIDTH + 70))
 
-        screen.blit(text_surface2, text_rect2)
+            screen.blit(text_surface2, text_rect2)
 
 #<----------------WINNING CONDITIONALS END HERE----------------->
 
@@ -229,23 +253,21 @@ running = True
 # 1) screen was being drawn AFTER the event conditionals
 # 2) because the initialization and grid creation were in the while loop
 # the screen was constantly being refreshed THAT'S WHY the code was not working!
-draw_init()
-draw_grid()
-
+draw_start()
 while running:
 
-    draw_status()
+
     for event in pygame.event.get():
         if event.type == pygame.QUIT: #to quit the program when clicked on "x"
             running = False
 
-        elif event.type == pygame.MOUSEBUTTONDOWN and not game_over:
+        elif event.type == pygame.MOUSEBUTTONDOWN and not game_over and screen_const == 1:
             mouseX = event.pos[0]
             mouseY = event.pos[1]
 
             if mouseY < SCREEN_WIDTH:
                 clicked_row = mouseY // SQUARE_SIZE
-                clicked_col = mouseX // SQUARE_SIZE\
+                clicked_col = mouseX // SQUARE_SIZE
 
                 if available_square(clicked_row, clicked_col):
                     mark_square(clicked_row, clicked_col, player)
@@ -265,9 +287,21 @@ while running:
                     elif player == 2 and not winning_conditionals(player):
                         player = 1
                     draw_figures()
-        elif game_over and event.type == pygame.KEYDOWN:
+        elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_r:
-                restart()
+                if screen_const == 0:
+                    # Start the game for the first time
+                    screen_const = 1
+                    draw_init()
+                    draw_grid()
+                elif game_over:
+                    # Restart the game
+                    restart()
+    if screen_const == 0:
+        draw_start()
+    else:
+        draw_status()
+
 
 
 
